@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Create Habit Log</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-light">
+    <div class="container mt-5">
+      <div class="card shadow">
+        <div class="card-header">
+          <h4>Add Habit Log</h4>
+        </div>
+
+        <div class="card-body">
+          <form method="POST" id="form">
+            <!-- Habit ID -->
+            <!-- <div class="mb-3">
+              <label class="form-label">Habit ID</label>
+              <input
+                type="number"
+                class="form-control"
+                name="habit_id"
+                placeholder="Enter habit ID"
+                required
+              />
+            </div> -->
+
+            <select name="habit_id" id="dropDown" class="form-select"></select>
+            <!-- Completed Date -->
+            <div class="mb-3">
+              <label class="form-label">Completed At</label>
+              <input type="date" class="form-control" name="completed_at" />
+            </div>
+
+            <!-- Note -->
+            <div class="mb-3">
+              <label class="form-label">Note</label>
+              <textarea
+                class="form-control"
+                name="note"
+                rows="3"
+                placeholder="Optional note"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Add Log</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="util.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const dropDown = document.querySelector("#dropDown");
+        const habits = await getHabits();
+
+        // build drop down
+        console.log(habits);
+
+        habits.forEach((habit) => {
+          const option = document.createElement("option");
+          option.value = habit.id;
+          option.innerText = habit.title;
+          dropDown.appendChild(option);
+        });
+        const form = document.getElementById("form");
+        console.log(form);
+        form.addEventListener("submit", function (event) {
+          console.log("soncole submited");
+          event.preventDefault();
+          let formdata = new FormData(this);
+          let data = {};
+
+          formdata.forEach((value, key) => {
+            data[key] = value;
+          });
+          data["habit_id"] = parseInt(data["habit_id"]);
+          console.log(data);
+          console.log(fetchQuery("habitsLog", "POST", data));
+        });
+      });
+    </script>
+  </body>
+</html>
